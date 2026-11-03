@@ -1,17 +1,20 @@
-# SmartEV – Battery-Aware EV Range Prediction and Charging Route Planner
+# Imoto25 – Battery-Aware EV Range Prediction and Charging Route Planner
 
 ## 1. Project Overview
-SmartEV is a software-based Electric Vehicle (EV) range prediction and charging route planning application. It estimates how far an EV can travel based on battery capacity, battery percentage, State of Health (SOH), energy efficiency, traffic impact, and air-conditioning usage.
+
+Imoto25 is a software-based Electric Vehicle (EV) range prediction and charging route planning application. It estimates how far an EV can travel based on battery capacity, battery percentage, State of Health (SOH), energy efficiency, traffic impact, and air-conditioning usage.
 
 It also identifies charging stations stored in a Neo4j graph database and provides charging recommendations based on the estimated driving range.
 
 ## 2. Problem Statement
+
 EV drivers may face range anxiety when travelling long distances. Battery condition, traffic, air-conditioning usage, and charging station availability can affect the journey.
 
-SmartEV aims to help drivers understand their estimated driving range and plan charging stops before starting a journey.
+Imoto25 aims to help drivers understand their estimated driving range and plan charging stops before starting a journey.
 
 ## 3. Proposed Solution
-SmartEV provides:
+
+Imoto25 provides:
 - EV battery range estimation.
 - Battery State of Health (SOH) consideration.
 - Traffic and AC impact adjustment.
@@ -21,16 +24,17 @@ SmartEV provides:
 - Warning when the estimated range is insufficient.
 
 ## 4. Technologies Used
+
 - Python
 - Streamlit
 - Neo4j Aura
 - Cypher Query Language
 - Folium
-- Streamlit-Folium
 - OSRM Routing API
 - Python Dotenv
 
 ## 5. Main Features
+
 1. Battery-based driving range prediction.
 2. Battery health consideration.
 3. Traffic and AC energy impact estimation.
@@ -39,6 +43,7 @@ SmartEV provides:
 6. Charging recommendation and insufficient-range warning.
 
 ## 6. Battery Range Calculation
+
 The application uses the following simplified calculation:
 
 **Actual Battery Capacity:**
@@ -64,6 +69,7 @@ Vehicle Route Planner/
 ├── prediction.py
 ├── .env
 ├── .gitignore
+├── requirements.txt
 └── README.md
 ```
 
@@ -72,7 +78,7 @@ Vehicle Route Planner/
 ### Step 1: Install required packages
 
 ```bash
-pip install streamlit pandas neo4j python-dotenv folium streamlit-folium requests
+pip install -r requirements.txt
 ```
 
 ### Step 2: Configure Neo4j
@@ -88,6 +94,8 @@ NEO4J_DATABASE=your_neo4j_database
 
 Do not upload the `.env` file or share database credentials.
 
+For Streamlit Cloud deployment, configure these values using the app's Secrets settings.
+
 ### Step 3: Run the application
 
 ```bash
@@ -95,6 +103,7 @@ streamlit run app.py
 ```
 
 ## 9. Limitations
+
 - Charging station information is currently demo data and is not verified live availability.
 - Some charging station coordinates are approximate.
 - OSRM provides route estimates, not live traffic conditions.
@@ -102,6 +111,7 @@ streamlit run app.py
 - The application is a software prototype and has not been validated with real EV driving data.
 
 ## 10. Future Enhancements
+
 - Integration with verified live charging station APIs.
 - Real-time charger availability.
 - Live traffic integration.
@@ -109,4 +119,6 @@ streamlit run app.py
 - Support for more EV models and routes.
 
 ## 11. Conclusion
+
+Imoto25 is a software-based EV range prediction and charging route planning prototype designed to help reduce range anxiety. By combining battery information, estimated energy consumption, route details, and charging station data, it provides users with useful insights for planning EV journeys. Future improvements can make the system more accurate and reliable through real-world EV data and verified live charging information.
 SmartEV demonstrates how battery information, route planning, and graph database technology can be combined to support EV journey planning. It aims to reduce range anxiety by providing estimated driving range and charging recommendations.
