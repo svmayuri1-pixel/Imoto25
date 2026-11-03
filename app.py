@@ -13,10 +13,217 @@ from prediction import predict_range, recommend_charging
 # ==========================================
 
 st.set_page_config(
-    page_title="Imoto25",
-    page_icon="🚗",
+    page_title="Imoto25 | EV Intelligence",
+    page_icon="⚡",
     layout="wide"
 )
+
+
+# ==========================================
+# NEON DRIVE UI THEME
+# ==========================================
+
+st.markdown("""
+<style>
+
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap');
+
+.stApp {
+    background: #080D16;
+    color: #F3F7FC;
+    font-family: 'Inter', sans-serif;
+}
+
+header[data-testid="stHeader"] {
+    background: transparent;
+}
+
+.block-container {
+    max-width: 1350px;
+    padding-top: 2rem;
+    padding-bottom: 3rem;
+}
+
+/* Main headings */
+
+h1, h2, h3 {
+    color: #F4F7FB !important;
+    font-family: 'Inter', sans-serif !important;
+}
+
+p, label, .stMarkdown {
+    color: #B6C3D2;
+}
+
+/* Sidebar */
+
+section[data-testid="stSidebar"] {
+    background: #101927;
+    border-right: 1px solid #263447;
+}
+
+/* Inputs */
+
+.stTextInput input,
+.stNumberInput input {
+    background: #141E2D !important;
+    color: white !important;
+    border: 1px solid #35465B !important;
+    border-radius: 10px !important;
+}
+
+.stSelectbox div[data-baseweb="select"] {
+    background: #141E2D !important;
+    border-radius: 10px !important;
+}
+
+.stSelectbox div,
+.stSelectbox span {
+    color: white;
+}
+
+.stSlider [data-baseweb="slider"] {
+    color: #B7FF5A;
+}
+
+/* Buttons */
+
+.stButton > button {
+    background: #B7FF5A;
+    color: #101820;
+    border: none;
+    border-radius: 12px;
+    padding: 0.75rem 1rem;
+    font-weight: 800;
+    width: 100%;
+    transition: 0.2s ease;
+}
+
+.stButton > button:hover {
+    background: #D4FF9A;
+    color: #101820;
+    box-shadow: 0 0 20px #B7FF5A55;
+    transform: translateY(-2px);
+}
+
+/* Metrics */
+
+[data-testid="stMetric"] {
+    background: linear-gradient(145deg, #172437, #101927);
+    border: 1px solid #304258;
+    padding: 20px;
+    border-radius: 16px;
+}
+
+[data-testid="stMetricValue"] {
+    color: #B7FF5A !important;
+    font-weight: 800;
+    font-family: 'Orbitron', sans-serif;
+}
+
+[data-testid="stMetricLabel"] {
+    color: #A8B8CB !important;
+}
+
+/* Tabs */
+
+.stTabs [data-baseweb="tab"] {
+    color: #A8B8CB;
+    font-weight: 600;
+}
+
+.stTabs [aria-selected="true"] {
+    color: #B7FF5A !important;
+    border-bottom-color: #B7FF5A !important;
+}
+
+/* Expanders */
+
+.streamlit-expanderHeader {
+    background: #172437;
+    border-radius: 10px;
+    color: white;
+}
+
+/* Dividers */
+
+hr {
+    border-color: #29394D;
+}
+
+/* Custom cards */
+
+.imoto-card {
+    background: linear-gradient(145deg, #172437, #101927);
+    border: 1px solid #304258;
+    border-radius: 18px;
+    padding: 22px;
+    margin-bottom: 12px;
+}
+
+.imoto-label {
+    color: #9BAFC5;
+    font-size: 11px;
+    letter-spacing: 2px;
+    font-weight: 700;
+}
+
+.imoto-value {
+    color: #B7FF5A;
+    font-size: 30px;
+    font-weight: 800;
+    font-family: 'Orbitron', sans-serif;
+}
+
+.imoto-hero {
+    background:
+        radial-gradient(circle at 90% 20%, #B7FF5A18, transparent 30%),
+        linear-gradient(120deg, #17283D, #0A111D);
+    border: 1px solid #34485E;
+    border-radius: 24px;
+    padding: 35px;
+    margin-bottom: 25px;
+}
+
+.imoto-logo {
+    font-family: 'Orbitron', sans-serif;
+    color: #B7FF5A;
+    font-size: 38px;
+    font-weight: 800;
+    letter-spacing: 3px;
+}
+
+.imoto-tag {
+    color: #B7FF5A;
+    letter-spacing: 3px;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.imoto-subtitle {
+    color: #A8B8CB;
+    font-size: 15px;
+}
+
+.imoto-section {
+    background: #111C2B;
+    border: 1px solid #27394E;
+    padding: 18px 22px;
+    border-radius: 14px;
+    margin-top: 10px;
+    margin-bottom: 15px;
+}
+
+.imoto-footer {
+    text-align: center;
+    color: #71849B;
+    font-size: 12px;
+    letter-spacing: 1px;
+    padding: 20px;
+}
+
+</style>
+""", unsafe_allow_html=True)
 
 
 # ==========================================
@@ -106,46 +313,84 @@ def get_charger_coordinates(charger):
 
 
 # ==========================================
-# TITLE
+# HERO HEADER
 # ==========================================
 
-st.title("🚗 Imoto25")
+st.markdown("""
+<div class="imoto-hero">
 
-st.subheader(
-    "Battery-Aware EV Range Prediction & Charging Planner"
-)
+    <div class="imoto-tag">
+        ELECTRIC MOBILITY INTELLIGENCE
+    </div>
 
-st.write(
-    "Predict EV driving range and explore charging recommendations."
-)
+    <div class="imoto-logo">
+        ⚡ IMOTO25
+    </div>
 
-st.divider()
+    <h2 style="font-size:27px; margin-top:10px;">
+        Your Journey. Your Energy.
+    </h2>
+
+    <p class="imoto-subtitle">
+        Intelligent EV range prediction and smarter charging route planning.
+    </p>
+
+    <br>
+
+    <span style="
+        background:#B7FF5A;
+        color:#101820;
+        padding:8px 15px;
+        border-radius:20px;
+        font-size:11px;
+        font-weight:800;
+        letter-spacing:1px;">
+        DRIVE SMARTER • TRAVEL FURTHER
+    </span>
+
+</div>
+""", unsafe_allow_html=True)
+
+
+# ==========================================
+# DASHBOARD INTRO
+# ==========================================
+
+st.markdown("""
+<div class="imoto-section">
+    <div class="imoto-tag">01 / VEHICLE INTELLIGENCE</div>
+    <h3 style="margin-bottom:5px;">Configure Your EV</h3>
+    <p style="margin:0;">
+        Enter your battery details to estimate your driving range.
+    </p>
+</div>
+""", unsafe_allow_html=True)
 
 
 # ==========================================
 # VEHICLE DETAILS
 # ==========================================
 
-st.header("🔋 Vehicle Details")
-
 col1, col2 = st.columns(2)
 
 with col1:
+
     capacity = st.number_input(
-        "Battery Capacity (kWh)",
+        "🔋 Battery Capacity (kWh)",
         min_value=1.0,
         value=40.0,
         step=1.0
     )
 
     battery = st.slider(
-        "Current Battery (%)",
+        "Current Battery Level (%)",
         0,
         100,
         80
     )
 
 with col2:
+
     soh = st.slider(
         "Battery Health (SOH %)",
         50,
@@ -154,11 +399,34 @@ with col2:
     )
 
     efficiency = st.number_input(
-        "Base Energy Consumption (kWh/km)",
+        "Energy Consumption (kWh/km)",
         min_value=0.01,
         value=0.15,
         step=0.01
     )
+
+
+# Battery visual indicator
+
+st.markdown("""
+<div class="imoto-section">
+    <div class="imoto-tag">LIVE INPUT / BATTERY LEVEL</div>
+</div>
+""", unsafe_allow_html=True)
+
+st.progress(battery / 100)
+
+battery_col1, battery_col2, battery_col3 = st.columns(3)
+
+with battery_col1:
+    st.metric("Battery", f"{battery}%")
+
+with battery_col2:
+    st.metric("Battery Health", f"{soh}%")
+
+with battery_col3:
+    st.metric("Capacity", f"{capacity:.1f} kWh")
+
 
 st.divider()
 
@@ -167,13 +435,22 @@ st.divider()
 # JOURNEY DETAILS
 # ==========================================
 
-st.header("📍 Journey Details")
+st.markdown("""
+<div class="imoto-section">
+    <div class="imoto-tag">02 / JOURNEY PLANNER</div>
+    <h3 style="margin-bottom:5px;">Where Are You Going?</h3>
+    <p style="margin:0;">
+        Select your starting point and destination.
+    </p>
+</div>
+""", unsafe_allow_html=True)
 
 col3, col4 = st.columns(2)
 
 with col3:
+
     start_location = st.selectbox(
-        "Starting Location",
+        "📍 Starting Location",
         list(locations.keys())
     )
 
@@ -183,8 +460,9 @@ destination_options = [
 ]
 
 with col4:
+
     destination = st.selectbox(
-        "Destination",
+        "🏁 Destination",
         destination_options
     )
 
@@ -196,9 +474,15 @@ end_coords = locations[destination]
 # ROAD ROUTE
 # ==========================================
 
-st.header("🛣️ Road Route")
+st.markdown("""
+<div class="imoto-section">
+    <div class="imoto-tag">03 / ROUTE INTELLIGENCE</div>
+    <h3 style="margin-bottom:5px;">Road Route Analysis</h3>
+</div>
+""", unsafe_allow_html=True)
 
-with st.spinner("Finding road route..."):
+with st.spinner("⚡ Calculating road route..."):
+
     road_coordinates, road_distance, travel_minutes = (
         get_road_route(start_coords, end_coords)
     )
@@ -209,33 +493,37 @@ if road_distance is not None:
 
     with col5:
         st.metric(
-            "OSRM Road Distance",
+            "🛣️ Road Distance",
             f"{road_distance:.2f} km"
         )
 
     with col6:
         st.metric(
-            "Estimated Travel Time",
+            "⏱️ Estimated Travel Time",
             f"{travel_minutes / 60:.2f} hours"
         )
 
     default_distance = float(round(road_distance, 2))
+
     st.success("Road route retrieved successfully.")
 
 else:
+
     st.warning(
         "OSRM route service unavailable. "
-        "Please enter the journey distance manually."
+        "Please enter journey distance manually."
     )
 
     default_distance = 350.0
 
+
 distance = st.number_input(
-    "Journey Distance used for Prediction (km)",
+    "Journey Distance Used for Prediction (km)",
     min_value=1.0,
     value=default_distance,
     step=1.0
 )
+
 
 st.divider()
 
@@ -244,25 +532,36 @@ st.divider()
 # DRIVING CONDITIONS
 # ==========================================
 
-st.header("🌦️ Driving Conditions")
+st.markdown("""
+<div class="imoto-section">
+    <div class="imoto-tag">04 / ENERGY CONDITIONS</div>
+    <h3 style="margin-bottom:5px;">Driving Environment</h3>
+    <p style="margin:0;">
+        Adjust estimated energy consumption for traffic and AC usage.
+    </p>
+</div>
+""", unsafe_allow_html=True)
 
 col7, col8 = st.columns(2)
 
 with col7:
+
     traffic = st.slider(
-        "Traffic Impact (%)",
+        "🚦 Traffic Impact (%)",
         0,
         40,
         10
     )
 
 with col8:
+
     ac_load = st.slider(
-        "AC Load Impact (%)",
+        "❄️ AC Load Impact (%)",
         0,
         20,
         5
     )
+
 
 adjusted_efficiency = efficiency * (
     1 + (traffic + ac_load) / 100
@@ -277,6 +576,7 @@ st.caption(
     "Traffic and AC impacts are demo assumptions."
 )
 
+
 st.divider()
 
 
@@ -284,79 +584,112 @@ st.divider()
 # NEO4J CHARGER LOOKUP
 # ==========================================
 
-st.header("🔌 Route Charging Stations")
+st.markdown("""
+<div class="imoto-section">
+    <div class="imoto-tag">05 / CHARGING NETWORK</div>
+    <h3 style="margin-bottom:5px;">Charging Station Intelligence</h3>
+    <p style="margin:0;">
+        Charger records retrieved from the Neo4j graph database.
+    </p>
+</div>
+""", unsafe_allow_html=True)
 
 chargers = []
 
 try:
-    with st.spinner("Loading charging stations from Neo4j..."):
+
+    with st.spinner("⚡ Connecting to Neo4j charging network..."):
+
         chargers = get_charging_stations(
             start_location,
             destination
         )
 
-    with st.expander("🔍 Charger Query Debug Information"):
+    with st.expander("🔍 Database Debug Information"):
+
         st.write("Starting Location:", start_location)
         st.write("Destination:", destination)
         st.write("Charger Records:", chargers)
 
     if chargers:
+
         st.success(
             f"{len(chargers)} charging station record(s) retrieved."
         )
 
         for charger in chargers:
 
-            st.write(
-                "**Charger:**",
-                charger.get("name", "Unknown")
-            )
+            with st.container(border=True):
 
-            st.write(
-                "**Location:**",
-                charger.get("location", "Unknown")
-            )
+                station_col1, station_col2 = st.columns([3, 1])
 
-            st.write(
-                "**Available:**",
-                charger.get("available", "Unknown")
-            )
+                with station_col1:
 
-            st.write(
-                "**Reliability:**",
-                charger.get("reliability", "Unknown"),
-                "(demo)"
-            )
+                    st.markdown(
+                        f"### 🔌 {charger.get('name', 'Unknown Station')}"
+                    )
 
-            coords = get_charger_coordinates(charger)
+                    st.write(
+                        "📍 Location:",
+                        charger.get("location", "Unknown")
+                    )
 
-            if coords:
-                st.write("**Coordinates:**", coords)
-            else:
-                st.warning("Charger coordinates unavailable.")
+                with station_col2:
 
-            st.divider()
+                    if charger.get("available") is True:
+                        st.success("Demo Available")
+                    else:
+                        st.error("Unavailable")
+
+                st.write(
+                    "Reliability:",
+                    charger.get("reliability", "Unknown"),
+                    "(demo)"
+                )
+
+                coords = get_charger_coordinates(charger)
+
+                if coords:
+                    st.caption(f"Approximate coordinates: {coords}")
+                else:
+                    st.caption("Coordinates unavailable.")
 
     else:
-        st.warning("No charging stations found for this route.")
+
+        st.warning(
+            "No charging station records found for this route."
+        )
 
 except Exception as error:
+
     chargers = []
+
     st.error(f"Neo4j Error: {error}")
+
 
 st.divider()
 
 
 # ==========================================
-# INTERACTIVE MAP
+# INTERACTIVE DARK MAP
 # ==========================================
 
-st.header("🗺️ Interactive Road Route Map")
+st.markdown("""
+<div class="imoto-section">
+    <div class="imoto-tag">06 / VISUAL NAVIGATION</div>
+    <h3 style="margin-bottom:5px;">Explore Your Route</h3>
+    <p style="margin:0;">
+        View the journey and charging station markers.
+    </p>
+</div>
+""", unsafe_allow_html=True)
+
 
 route_map = folium.Map(
     location=start_coords,
     zoom_start=7,
-    control_scale=True
+    control_scale=True,
+    tiles="CartoDB dark_matter"
 )
 
 
@@ -399,9 +732,9 @@ if road_coordinates:
 
     folium.PolyLine(
         road_points,
-        color="blue",
+        color="#B7FF5A",
         weight=5,
-        opacity=0.8,
+        opacity=0.9,
         tooltip="OSRM road route"
     ).add_to(route_map)
 
@@ -411,7 +744,7 @@ else:
 
     folium.PolyLine(
         [start_coords, end_coords],
-        color="gray",
+        color="#B7FF5A",
         weight=3,
         dash_array="8",
         tooltip="Demo connection - not a road route"
@@ -453,8 +786,6 @@ for charger in chargers:
         ).add_to(route_map)
 
 
-# DISPLAY MAP WITHOUT STREAMLIT-FOLIUM
-
 map_html = route_map.get_root().render()
 
 components.html(
@@ -464,10 +795,11 @@ components.html(
 )
 
 st.caption(
-    "Blue: OSRM road route. Orange: Neo4j charger marker. "
-    "Gray dashed: demo connection when road routing is unavailable. "
-    "Map supports zoom and movement."
+    "Neon green: OSRM road route. Orange: charger markers. "
+    "Dashed line: demo connection if OSRM is unavailable. "
+    "Charger coordinates may be approximate."
 )
+
 
 st.divider()
 
@@ -476,10 +808,19 @@ st.divider()
 # BATTERY RANGE PREDICTION
 # ==========================================
 
-st.header("📊 Battery Range Prediction")
+st.markdown("""
+<div class="imoto-section">
+    <div class="imoto-tag">07 / RANGE INTELLIGENCE</div>
+    <h3 style="margin-bottom:5px;">Will You Make It?</h3>
+    <p style="margin:0;">
+        Calculate estimated range and explore charging recommendations.
+    </p>
+</div>
+""", unsafe_allow_html=True)
+
 
 if st.button(
-    "🚀 Predict My Journey",
+    "⚡ INITIATE JOURNEY ANALYSIS",
     use_container_width=True
 ):
 
@@ -527,25 +868,57 @@ if st.button(
         and station_distance <= distance
     )
 
-    # PREDICTION RESULTS
+
+    # ======================================
+    # RESULTS DASHBOARD
+    # ======================================
 
     st.divider()
-    st.header("📊 Prediction Results")
 
-    col9, col10, col11 = st.columns(3)
+    st.markdown("""
+    <div class="imoto-hero">
+        <div class="imoto-tag">ANALYSIS COMPLETE</div>
+        <h2 style="font-size:30px;">Your EV Intelligence Report</h2>
+        <p>Here is your estimated battery and journey performance.</p>
+    </div>
+    """, unsafe_allow_html=True)
 
-    with col9:
-        st.metric("Battery Health", f"{soh}%")
 
-    with col10:
-        st.metric("Usable Energy", f"{energy:.2f} kWh")
+    result1, result2, result3 = st.columns(3)
 
-    with col11:
-        st.metric("Estimated Range", f"{estimated_range:.2f} km")
+    with result1:
 
+        st.metric(
+            "🔋 Battery Health",
+            f"{soh}%"
+        )
+
+    with result2:
+
+        st.metric(
+            "⚡ Usable Energy",
+            f"{energy:.2f} kWh"
+        )
+
+    with result3:
+
+        st.metric(
+            "🛣️ Estimated Range",
+            f"{estimated_range:.2f} km"
+        )
+
+
+    # ======================================
     # BATTERY STATUS
+    # ======================================
 
-    st.subheader("🔋 Battery Status")
+    st.markdown("""
+    <div class="imoto-section">
+        <div class="imoto-tag">BATTERY STATUS</div>
+        <h3>Journey Readiness</h3>
+    </div>
+    """, unsafe_allow_html=True)
+
 
     if estimated_range >= distance:
 
@@ -572,12 +945,38 @@ if st.button(
 
         st.error(
             "🔴 RED — Estimated range is insufficient for the destination "
-            "or a verified intermediate charger."
+            "or the returned charger location."
         )
 
-    # DESTINATION REACHABILITY
 
-    st.subheader("📍 Destination Reachability")
+    # ======================================
+    # RANGE COMPARISON
+    # ======================================
+
+    st.markdown("""
+    <div class="imoto-section">
+        <div class="imoto-tag">RANGE ANALYSIS</div>
+        <h3>Estimated Range vs Journey</h3>
+    </div>
+    """, unsafe_allow_html=True)
+
+
+    comparison_col1, comparison_col2 = st.columns(2)
+
+    with comparison_col1:
+
+        st.metric(
+            "Estimated Range",
+            f"{estimated_range:.2f} km"
+        )
+
+    with comparison_col2:
+
+        st.metric(
+            "Journey Distance",
+            f"{distance:.2f} km"
+        )
+
 
     if estimated_range >= distance:
 
@@ -593,21 +992,30 @@ if st.button(
             f"Estimated range shortfall: {shortfall:.2f} km"
         )
 
-    # CHARGING RECOMMENDATION
 
-    st.subheader("⚡ Charging Recommendation")
+    # ======================================
+    # CHARGING RECOMMENDATION
+    # ======================================
+
+    st.markdown("""
+    <div class="imoto-section">
+        <div class="imoto-tag">CHARGING INTELLIGENCE</div>
+        <h3>Smart Charging Recommendation</h3>
+    </div>
+    """, unsafe_allow_html=True)
+
 
     if not available_chargers:
 
         st.warning(
-            "No available charger was returned by the Neo4j lookup."
+            "No available charger record was returned by the Neo4j lookup."
         )
 
     elif station_distance is None:
 
         st.warning(
             "Charger road distance could not be calculated. "
-            "A charging stop cannot be verified."
+            "A charging stop cannot be assessed."
         )
 
     elif not charger_distance_valid:
@@ -628,7 +1036,6 @@ if st.button(
 
         st.info(recommendation)
 
-    # CHARGER DISTANCE
 
     if station_distance is not None:
 
@@ -647,28 +1054,48 @@ if st.button(
             "No valid charger road distance available."
         )
 
-    # JOURNEY SUMMARY
 
-    st.divider()
-    st.header("🧾 Journey Summary")
+    # ======================================
+    # JOURNEY SUMMARY
+    # ======================================
+
+    st.markdown("""
+    <div class="imoto-section">
+        <div class="imoto-tag">JOURNEY REPORT</div>
+        <h3>Your Journey Summary</h3>
+    </div>
+    """, unsafe_allow_html=True)
+
 
     summary_col1, summary_col2 = st.columns(2)
 
     with summary_col1:
-        st.write("📍 Start:", start_location)
-        st.write("🏁 Destination:", destination)
-        st.write("🛣️ Journey Distance:", f"{distance:.2f} km")
-        st.write("🔋 Battery:", f"{battery}%")
+
+        st.write("📍 **Starting Point:**", start_location)
+        st.write("🏁 **Destination:**", destination)
+        st.write("🛣️ **Journey Distance:**", f"{distance:.2f} km")
+        st.write("🔋 **Battery Level:**", f"{battery}%")
+
 
     with summary_col2:
-        st.write("💚 Battery SOH:", f"{soh}%")
-        st.write("⚡ Usable Energy:", f"{energy:.2f} kWh")
-        st.write("🚗 Estimated Range:", f"{estimated_range:.2f} km")
-        st.write("🔌 Available Charger Records:", len(available_chargers))
 
+        st.write("💚 **Battery SOH:**", f"{soh}%")
+        st.write("⚡ **Usable Energy:**", f"{energy:.2f} kWh")
+        st.write("🚗 **Estimated Range:**", f"{estimated_range:.2f} km")
+        st.write("🔌 **Available Charger Records:**", len(available_chargers))
+
+
+    # ======================================
     # FINAL STATUS
+    # ======================================
 
-    st.subheader("🏁 Final Journey Status")
+    st.markdown("""
+    <div class="imoto-section">
+        <div class="imoto-tag">FINAL JOURNEY STATUS</div>
+        <h3>Will You Make It?</h3>
+    </div>
+    """, unsafe_allow_html=True)
+
 
     if battery_status == "GREEN":
 
@@ -679,35 +1106,51 @@ if st.button(
     elif battery_status == "YELLOW":
 
         st.warning(
-            "Estimated range may reach the charger. "
-            "Verify actual station location and availability."
+            "Estimated range may reach the returned charger location. "
+            "Verify the actual station location and availability."
         )
 
     else:
 
         st.error(
             "Estimated range does not cover the destination "
-            "or a verified intermediate charger."
+            "or the returned charger location."
         )
 
-    # DISCLAIMER
 
-    st.caption(
-        "Imoto25 is a demo prediction system. Battery consumption, "
-        "traffic and AC impacts are assumptions. Charger availability "
-        "and reliability are demo data. Charger coordinates may be "
-        "approximate town-centre coordinates, not verified station GPS. "
-        "OSRM provides estimated routes, not live traffic. Actual "
-        "journey feasibility must be independently verified."
-    )
+    # ======================================
+    # DISCLAIMER
+    # ======================================
+
+    st.markdown("""
+    <div class="imoto-card">
+        <div class="imoto-tag">IMPORTANT INFORMATION</div>
+        <p>
+        Imoto25 is a demo prediction system. Battery consumption,
+        traffic and AC impacts are assumptions. Charger availability
+        and reliability are demo data. Charger coordinates may be
+        approximate town-centre coordinates, not verified station GPS.
+        OSRM provides estimated routes, not live traffic. Actual journey
+        feasibility must be independently verified.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
 
 
 # ==========================================
 # FOOTER
 # ==========================================
 
-st.divider()
-
-st.caption(
-    "Imoto25 | EV Range Prediction & Charging Route Planner | Demo Version"
-)
+st.markdown("""
+<div class="imoto-footer">
+    ⚡ IMOTO25
+    <br><br>
+    EV RANGE PREDICTION & CHARGING ROUTE PLANNER
+    <br>
+    DRIVE SMARTER • TRAVEL FURTHER
+    <br><br>
+    <span style="color:#52657B;">
+        SOFTWARE PROTOTYPE • DEMO VERSION
+    </span>
+</div>
+""", unsafe_allow_html=True)
