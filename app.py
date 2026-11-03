@@ -115,29 +115,6 @@ hr {
     border-color: #29394D;
 }
 
-.imoto-hero {
-    background: linear-gradient(120deg, #17283D, #0A111D);
-    border: 1px solid #34485E;
-    border-radius: 22px;
-    padding: 28px;
-}
-
-.imoto-section {
-    background: #111C2B;
-    border: 1px solid #27394E;
-    padding: 16px 20px;
-    border-radius: 14px;
-    margin-top: 12px;
-    margin-bottom: 16px;
-}
-
-.imoto-tag {
-    color: #B7FF5A;
-    font-size: 11px;
-    letter-spacing: 2px;
-    font-weight: 800;
-}
-
 .imoto-logo {
     color: #B7FF5A;
     font-family: 'Orbitron', sans-serif;
@@ -194,13 +171,14 @@ def get_road_route(start_coords, end_coords):
         response = requests.get(
             url,
             params=params,
-            timeout=15
+            timeout=20
         )
-        response.raise_for_status()
 
+        response.raise_for_status()
         data = response.json()
 
         if data.get("code") == "Ok" and data.get("routes"):
+
             route = data["routes"][0]
 
             return (
@@ -344,6 +322,7 @@ st.markdown("### 03 / ROUTE INTELLIGENCE")
 st.subheader("Road Route Analysis")
 
 with st.spinner("Calculating road route..."):
+
     road_coordinates, road_distance, travel_minutes = (
         get_road_route(start_coords, end_coords)
     )
@@ -353,18 +332,22 @@ if road_distance is not None:
     r1, r2 = st.columns(2)
 
     r1.metric("🛣️ Road Distance", f"{road_distance:.2f} km")
+
     r2.metric(
         "⏱️ Estimated Travel Time",
         f"{travel_minutes / 60:.2f} hours"
     )
 
     st.success("Road route retrieved successfully.")
+
     default_distance = float(round(road_distance, 2))
 
 else:
+
     st.warning(
         "OSRM route service unavailable. Enter journey distance manually."
     )
+
     default_distance = 350.0
 
 distance = st.number_input(
@@ -416,13 +399,16 @@ st.subheader("Charging Station Intelligence")
 chargers = []
 
 try:
+
     with st.spinner("Connecting to Neo4j charging network..."):
+
         chargers = get_charging_stations(
             start_location,
             destination
         )
 
     with st.expander("Database Debug Information"):
+
         st.write("Starting Location:", start_location)
         st.write("Destination:", destination)
         st.write("Charger records:", chargers)
@@ -468,7 +454,9 @@ try:
         st.warning("No charging station records found.")
 
 except Exception as error:
+
     chargers = []
+
     st.error(f"Neo4j Error: {error}")
 
 st.divider()
@@ -481,27 +469,49 @@ st.divider()
 st.markdown("### 06 / VISUAL NAVIGATION")
 st.subheader("Explore Your Route")
 
+# Create map with OpenStreetMap as the default tile source.
 route_map = folium.Map(
     location=start_coords,
     zoom_start=7,
-    control_scale=True,
-    tiles="CartoDB dark_matter"
+    tiles="OpenStreetMap",
+    control_scale=True
 )
 
+# Add another map style as an optional layer.
+folium.TileLayer(
+    tiles="CartoDB positron",
+    name="Light Map",
+    control=True
+).add_to(route_map)
+
+
+# Start marker
 folium.Marker(
-    start_coords,
+    location=start_coords,
     tooltip=f"Start: {start_location}",
     popup=f"Starting Location: {start_location}",
-    icon=folium.Icon(color="green", icon="play", prefix="fa")
+    icon=folium.Icon(
+        color="green",
+        icon="play",
+        prefix="fa"
+    )
 ).add_to(route_map)
 
+
+# Destination marker
 folium.Marker(
-    end_coords,
+    location=end_coords,
     tooltip=f"Destination: {destination}",
     popup=f"Destination: {destination}",
-    icon=folium.Icon(color="red", icon="flag", prefix="fa")
+    icon=folium.Icon(
+        color="red",
+        icon="flag",
+        prefix="fa"
+    )
 ).add_to(route_map)
 
+
+# Draw actual OSRM route if available
 if road_coordinates:
 
     road_points = [
@@ -509,25 +519,30 @@ if road_coordinates:
     ]
 
     folium.PolyLine(
-        road_points,
-        color="#B7FF5A",
-        weight=5,
-        opacity=0.9,
-        tooltip="OSRM road route"
+        locations=road_points,
+        color="#80CC28",
+        weight=6,
+        opacity=0.95,
+        tooltip="OSRM Road Route"
     ).add_to(route_map)
 
     route_map.fit_bounds(road_points)
 
 else:
 
+    # Straight demo connection only, not a real road route.
     folium.PolyLine(
-        [start_coords, end_coords],
-        color="#B7FF5A",
-        weight=3,
+        locations=[start_coords, end_coords],
+        color="#80CC28",
+        weight=4,
         dash_array="8",
         tooltip="Demo connection - not a road route"
     ).add_to(route_map)
 
+    route_map.fit_bounds([start_coords, end_coords])
+
+
+# Add charging station markers
 for charger in chargers:
 
     station_coords = get_charger_coordinates(charger)
@@ -535,7 +550,7 @@ for charger in chargers:
     if station_coords:
 
         folium.Marker(
-            station_coords,
+            location=station_coords,
             tooltip=charger.get("name", "Charging Station"),
             popup=(
                 f"Station: {charger.get('name', 'Unknown')}<br>"
@@ -549,16 +564,29 @@ for charger in chargers:
             )
         ).add_to(route_map)
 
-# Display map using streamlit-folium
+
+# Show layer selection control
+folium.LayerControl(
+    collapsed=True
+).add_to(route_map)
+
+
+# Display interactive map
 st_folium(
     route_map,
-    width=None,
-    height=480,
-    returned_objects=[]
+    width=1100,
+    height=520,
+    returned_objects=[],
+    key="imoto25_route_map"
 )
 
 st.caption(
-    "Neon green: OSRM route. Orange: charger markers. "
+    "🟢 Green: Starting point | 🔴 Red: Destination | "
+    "🟠 Orange: Charger | Green line: OSRM route"
+)
+
+st.caption(
+    "Map tiles require an internet connection. "
     "Charger coordinates may be approximate."
 )
 
@@ -603,7 +631,9 @@ if st.button(
         station_coords = get_charger_coordinates(first_charger)
 
         if station_coords:
+
             with st.spinner("Calculating charger road distance..."):
+
                 _, station_distance, _ = get_road_route(
                     start_coords,
                     station_coords
@@ -617,6 +647,7 @@ if st.button(
     st.divider()
 
     st.success("ANALYSIS COMPLETE")
+
     st.markdown("## Your EV Intelligence Report")
 
     x1, x2, x3 = st.columns(3)
@@ -630,6 +661,7 @@ if st.button(
     if estimated_range >= distance:
 
         battery_status = "GREEN"
+
         st.success(
             "🟢 GREEN — Estimated range covers the destination distance."
         )
@@ -640,6 +672,7 @@ if st.button(
     ):
 
         battery_status = "YELLOW"
+
         st.warning(
             "🟡 YELLOW — Estimated range may reach the selected charger."
         )
@@ -647,6 +680,7 @@ if st.button(
     else:
 
         battery_status = "RED"
+
         st.error(
             "🔴 RED — Estimated range is insufficient for the destination "
             "or returned charger location."
@@ -660,10 +694,14 @@ if st.button(
     y2.metric("Journey Distance", f"{distance:.2f} km")
 
     if estimated_range < distance:
+
         st.warning(
-            f"Estimated range shortfall: {distance - estimated_range:.2f} km"
+            f"Estimated range shortfall: "
+            f"{distance - estimated_range:.2f} km"
         )
+
     else:
+
         st.success("Estimated battery range covers the journey.")
 
     st.markdown("### CHARGING INTELLIGENCE")
@@ -710,31 +748,39 @@ if st.button(
     s1, s2 = st.columns(2)
 
     with s1:
+
         st.write("📍 Starting Point:", start_location)
         st.write("🏁 Destination:", destination)
         st.write("🛣️ Journey Distance:", f"{distance:.2f} km")
         st.write("🔋 Battery Level:", f"{battery}%")
 
     with s2:
+
         st.write("💚 Battery SOH:", f"{soh}%")
         st.write("⚡ Usable Energy:", f"{energy:.2f} kWh")
         st.write("🚗 Estimated Range:", f"{estimated_range:.2f} km")
-        st.write("🔌 Available Charger Records:", len(available_chargers))
+        st.write(
+            "🔌 Available Charger Records:",
+            len(available_chargers)
+        )
 
     st.markdown("### FINAL JOURNEY STATUS")
 
     if battery_status == "GREEN":
+
         st.success(
             "Destination is reachable based on estimated battery range."
         )
 
     elif battery_status == "YELLOW":
+
         st.warning(
             "Estimated range may reach the returned charger location. "
             "Verify actual station location and availability."
         )
 
     else:
+
         st.error(
             "Estimated range does not cover the destination "
             "or returned charger location."
