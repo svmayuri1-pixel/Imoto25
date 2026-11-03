@@ -13,7 +13,7 @@ from prediction import predict_range, recommend_charging
 # ==========================================
 
 st.set_page_config(
-    page_title="SmartEV",
+    page_title="Imoto25",
     page_icon="🚗",
     layout="wide"
 )
@@ -109,7 +109,7 @@ def get_charger_coordinates(charger):
 # TITLE
 # ==========================================
 
-st.title("🚗 SmartEV")
+st.title("🚗 Imoto25")
 
 st.subheader(
     "Battery-Aware EV Range Prediction & Charging Planner"
@@ -693,7 +693,7 @@ if st.button(
     # DISCLAIMER
 
     st.caption(
-        "SmartEV is a demo prediction system. Battery consumption, "
+        "Imoto25 is a demo prediction system. Battery consumption, "
         "traffic and AC impacts are assumptions. Charger availability "
         "and reliability are demo data. Charger coordinates may be "
         "approximate town-centre coordinates, not verified station GPS. "
@@ -709,5 +709,5 @@ if st.button(
 st.divider()
 
 st.caption(
-    "SmartEV | EV Range Prediction & Charging Route Planner | Demo Version"
+    "Imoto25 | EV Range Prediction & Charging Route Planner | Demo Version"
 )
