@@ -70,7 +70,7 @@ if __name__ == "__main__":
     # Get charging stations from Neo4j
     chargers = get_charging_stations("Chennai", "Salem")
 
-    print("\n----- SMART EV PREDICTION -----")
+    print("\n----- IMOTO25 PREDICTION -----")
     print("Battery Capacity:", capacity, "kWh")
     print("Battery Percentage:", battery, "%")
     print("Battery SOH:", soh, "%")
