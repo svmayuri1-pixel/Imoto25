@@ -1,9 +1,9 @@
 
 import streamlit as st
+import streamlit.components.v1 as components
 import folium
 import requests
 
-from streamlit_folium import st_folium
 from charger import get_charging_stations
 from prediction import predict_range, recommend_charging
 
@@ -53,7 +53,6 @@ def get_road_route(start_coords, end_coords):
     }
 
     try:
-
         response = requests.get(
             url,
             params=params,
@@ -61,11 +60,9 @@ def get_road_route(start_coords, end_coords):
         )
 
         response.raise_for_status()
-
         data = response.json()
 
         if data.get("code") == "Ok" and data.get("routes"):
-
             route = data["routes"][0]
 
             return (
@@ -76,12 +73,7 @@ def get_road_route(start_coords, end_coords):
 
         return None, None, None
 
-    except (
-        requests.RequestException,
-        ValueError,
-        KeyError
-    ):
-
+    except (requests.RequestException, ValueError, KeyError):
         return None, None, None
 
 
@@ -98,7 +90,6 @@ def get_charger_coordinates(charger):
         return None
 
     try:
-
         latitude = float(latitude)
         longitude = float(longitude)
 
@@ -111,7 +102,6 @@ def get_charger_coordinates(charger):
         return latitude, longitude
 
     except (TypeError, ValueError):
-
         return None
 
 
@@ -141,7 +131,6 @@ st.header("🔋 Vehicle Details")
 col1, col2 = st.columns(2)
 
 with col1:
-
     capacity = st.number_input(
         "Battery Capacity (kWh)",
         min_value=1.0,
@@ -157,7 +146,6 @@ with col1:
     )
 
 with col2:
-
     soh = st.slider(
         "Battery Health (SOH %)",
         50,
@@ -172,7 +160,6 @@ with col2:
         step=0.01
     )
 
-
 st.divider()
 
 
@@ -185,7 +172,6 @@ st.header("📍 Journey Details")
 col3, col4 = st.columns(2)
 
 with col3:
-
     start_location = st.selectbox(
         "Starting Location",
         list(locations.keys())
@@ -197,12 +183,10 @@ destination_options = [
 ]
 
 with col4:
-
     destination = st.selectbox(
         "Destination",
         destination_options
     )
-
 
 start_coords = locations[start_location]
 end_coords = locations[destination]
@@ -215,36 +199,30 @@ end_coords = locations[destination]
 st.header("🛣️ Road Route")
 
 with st.spinner("Finding road route..."):
-
     road_coordinates, road_distance, travel_minutes = (
         get_road_route(start_coords, end_coords)
     )
-
 
 if road_distance is not None:
 
     col5, col6 = st.columns(2)
 
     with col5:
-
         st.metric(
             "OSRM Road Distance",
             f"{road_distance:.2f} km"
         )
 
     with col6:
-
         st.metric(
             "Estimated Travel Time",
             f"{travel_minutes / 60:.2f} hours"
         )
 
     default_distance = float(round(road_distance, 2))
-
     st.success("Road route retrieved successfully.")
 
 else:
-
     st.warning(
         "OSRM route service unavailable. "
         "Please enter the journey distance manually."
@@ -252,14 +230,12 @@ else:
 
     default_distance = 350.0
 
-
 distance = st.number_input(
     "Journey Distance used for Prediction (km)",
     min_value=1.0,
     value=default_distance,
     step=1.0
 )
-
 
 st.divider()
 
@@ -273,7 +249,6 @@ st.header("🌦️ Driving Conditions")
 col7, col8 = st.columns(2)
 
 with col7:
-
     traffic = st.slider(
         "Traffic Impact (%)",
         0,
@@ -282,14 +257,12 @@ with col7:
     )
 
 with col8:
-
     ac_load = st.slider(
         "AC Load Impact (%)",
         0,
         20,
         5
     )
-
 
 adjusted_efficiency = efficiency * (
     1 + (traffic + ac_load) / 100
@@ -304,7 +277,6 @@ st.caption(
     "Traffic and AC impacts are demo assumptions."
 )
 
-
 st.divider()
 
 
@@ -317,22 +289,18 @@ st.header("🔌 Route Charging Stations")
 chargers = []
 
 try:
-
     with st.spinner("Loading charging stations from Neo4j..."):
-
         chargers = get_charging_stations(
             start_location,
             destination
         )
 
     with st.expander("🔍 Charger Query Debug Information"):
-
         st.write("Starting Location:", start_location)
         st.write("Destination:", destination)
         st.write("Charger Records:", chargers)
 
     if chargers:
-
         st.success(
             f"{len(chargers)} charging station record(s) retrieved."
         )
@@ -363,26 +331,18 @@ try:
             coords = get_charger_coordinates(charger)
 
             if coords:
-
                 st.write("**Coordinates:**", coords)
-
             else:
-
                 st.warning("Charger coordinates unavailable.")
 
             st.divider()
 
     else:
-
         st.warning("No charging stations found for this route.")
 
-
 except Exception as error:
-
     chargers = []
-
     st.error(f"Neo4j Error: {error}")
-
 
 st.divider()
 
@@ -395,7 +355,8 @@ st.header("🗺️ Interactive Road Route Map")
 
 route_map = folium.Map(
     location=start_coords,
-    zoom_start=7
+    zoom_start=7,
+    control_scale=True
 )
 
 
@@ -492,19 +453,21 @@ for charger in chargers:
         ).add_to(route_map)
 
 
-# DISPLAY MAP
+# DISPLAY MAP WITHOUT STREAMLIT-FOLIUM
 
-st_folium(
-    route_map,
-    width=None,
-    height=450
+map_html = route_map.get_root().render()
+
+components.html(
+    map_html,
+    height=480,
+    scrolling=False
 )
 
 st.caption(
     "Blue: OSRM road route. Orange: Neo4j charger marker. "
-    "Gray dashed: demo connection when road routing is unavailable."
+    "Gray dashed: demo connection when road routing is unavailable. "
+    "Map supports zoom and movement."
 )
-
 
 st.divider()
 
@@ -527,16 +490,10 @@ if st.button(
         soh
     )
 
-
-    # AVAILABLE CHARGERS
-
     available_chargers = [
         charger for charger in chargers
         if charger.get("available") is True
     ]
-
-
-    # CHARGER DISTANCE
 
     station_distance = None
     first_charger_name = None
@@ -565,42 +522,26 @@ if st.button(
                     station_coords
                 )
 
-
     charger_distance_valid = (
         station_distance is not None
         and station_distance <= distance
     )
 
-
     # PREDICTION RESULTS
 
     st.divider()
-
     st.header("📊 Prediction Results")
 
     col9, col10, col11 = st.columns(3)
 
     with col9:
-
-        st.metric(
-            "Battery Health",
-            f"{soh}%"
-        )
+        st.metric("Battery Health", f"{soh}%")
 
     with col10:
-
-        st.metric(
-            "Usable Energy",
-            f"{energy:.2f} kWh"
-        )
+        st.metric("Usable Energy", f"{energy:.2f} kWh")
 
     with col11:
-
-        st.metric(
-            "Estimated Range",
-            f"{estimated_range:.2f} km"
-        )
-
+        st.metric("Estimated Range", f"{estimated_range:.2f} km")
 
     # BATTERY STATUS
 
@@ -634,7 +575,6 @@ if st.button(
             "or a verified intermediate charger."
         )
 
-
     # DESTINATION REACHABILITY
 
     st.subheader("📍 Destination Reachability")
@@ -652,7 +592,6 @@ if st.button(
         st.warning(
             f"Estimated range shortfall: {shortfall:.2f} km"
         )
-
 
     # CHARGING RECOMMENDATION
 
@@ -689,7 +628,6 @@ if st.button(
 
         st.info(recommendation)
 
-
     # CHARGER DISTANCE
 
     if station_distance is not None:
@@ -709,29 +647,24 @@ if st.button(
             "No valid charger road distance available."
         )
 
-
     # JOURNEY SUMMARY
 
     st.divider()
-
     st.header("🧾 Journey Summary")
 
     summary_col1, summary_col2 = st.columns(2)
 
     with summary_col1:
-
         st.write("📍 Start:", start_location)
         st.write("🏁 Destination:", destination)
         st.write("🛣️ Journey Distance:", f"{distance:.2f} km")
         st.write("🔋 Battery:", f"{battery}%")
 
     with summary_col2:
-
         st.write("💚 Battery SOH:", f"{soh}%")
         st.write("⚡ Usable Energy:", f"{energy:.2f} kWh")
         st.write("🚗 Estimated Range:", f"{estimated_range:.2f} km")
         st.write("🔌 Available Charger Records:", len(available_chargers))
-
 
     # FINAL STATUS
 
@@ -756,7 +689,6 @@ if st.button(
             "Estimated range does not cover the destination "
             "or a verified intermediate charger."
         )
-
 
     # DISCLAIMER
 
